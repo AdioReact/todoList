@@ -8,6 +8,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import Task from "./components/Task";
 
@@ -16,8 +17,15 @@ export default function App() {
   const [taskItems, setTaskItems] = useState([]);
 
   const handleAddTask = () => {
+    Keyboard.dismiss();
     setTaskItems([...taskItems, task]);
     setTask(null);
+  };
+
+  const completeTask = (index) => {
+    let itemsCopy = [...taskItems];
+    itemsCopy.splice(index, 1);
+    setTaskItems(itemsCopy);
   };
 
   return (
@@ -28,12 +36,14 @@ export default function App() {
         <Text style={styles.sectionTitle}>Today's Tasks</Text>
 
         <View style={styles.items}>
-          {/*This is where the task will go*/}
+          {/*This is where the tasks will go*/}
           {taskItems.map((item, index) => {
-            return <Task key={index} text={item} />;
+            return (
+              <TouchableOpacity onPress={() => completeTask(index)}>
+                <Task text={item} />
+              </TouchableOpacity>
+            );
           })}
-          {/*<Task text={"Task 1"} />
-        <Task text={"Task 2"} />*/}
         </View>
       </View>
 
@@ -80,13 +90,13 @@ const styles = StyleSheet.create({
     bottom: 60,
     width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
   },
   input: {
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: "white",
+    backgroundColor: "#FFF",
     borderRadius: 60,
     borderColor: "#C0C0C0",
     borderWidth: 1,
